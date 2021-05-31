@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
@@ -28,6 +29,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUser(User user) {
         User _user = new User();
+
+        if (user.getId() != 0) {
+            _user.setId(user.getId());
+        }
+
         _user.setName(user.getName());
         _user.setSurname(user.getSurname());
         _user.setDateOfBirth(user.getDateOfBirth());
