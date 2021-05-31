@@ -1,7 +1,10 @@
 package com.rentalcar.springboot.rentalcarspringboot.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "category")
@@ -13,6 +16,10 @@ public class Category implements Serializable {
 
     @Column(name = "typology")
     private String typology;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Vehicle> vehicles;
 
     public Category() {}
 
@@ -34,5 +41,17 @@ public class Category implements Serializable {
 
     public void setTypology(String typology) {
         this.typology = typology;
+    }
+
+    public List<Vehicle> getVehicles() {
+        return vehicles;
+    }
+
+    public void setVehicles(List<Vehicle> vehicles) {
+        this.vehicles = vehicles;
+    }
+
+    public void addVehicle(Vehicle vehicle) {
+        vehicles.add(vehicle);
     }
 }
