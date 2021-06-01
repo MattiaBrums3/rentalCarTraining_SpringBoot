@@ -40,9 +40,7 @@ public class RentalController {
     @GetMapping("/rentals/user/{id}")
     public ResponseEntity<List<Rental>> getRentalsByUser(@PathVariable("id") int id) {
         try {
-            System.out.println("rental");
             List<Rental> rentals = rentalService.findByUser(id);
-            System.out.println("ciao");
 
             if (rentals.isEmpty()) {
                 return new ResponseEntity<>(new HttpHeaders(), HttpStatus.NO_CONTENT);
