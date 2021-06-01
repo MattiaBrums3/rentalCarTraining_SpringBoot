@@ -38,6 +38,7 @@ public class VehicleServiceImpl implements VehicleService {
         _vehicle.setManufacturer(vehicle.getManufacturer());
         _vehicle.setLicensePlate(vehicle.getLicensePlate());
         _vehicle.setYearOfRegistration(vehicle.getYearOfRegistration());
+        _vehicle.setCategory((vehicle.getCategory()));
         vehicleRepository.save(_vehicle);
     }
 
