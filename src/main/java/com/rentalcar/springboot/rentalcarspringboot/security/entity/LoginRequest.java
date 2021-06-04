@@ -1,14 +1,16 @@
 package com.rentalcar.springboot.rentalcarspringboot.security.entity;
 
+import com.rentalcar.springboot.rentalcarspringboot.model.User;
+
 public class LoginRequest {
     private String username;
     private String password;
 
     public LoginRequest() {}
 
-    public LoginRequest(String username, String password) {
-        this.username = username;
-        this.password = password;
+    public LoginRequest(User user) {
+        this.username = user.getUsername();
+        this.password = user.getPassword();
     }
 
     public String getUsername() {

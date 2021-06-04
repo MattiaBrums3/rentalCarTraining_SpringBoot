@@ -1,23 +1,24 @@
 package com.rentalcar.springboot.rentalcarspringboot.security;
 
-import com.rentalcar.springboot.rentalcarspringboot.security.entity.UserDetails;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Component
-public class JwtUtils {
+public class JwtUtils implements Serializable {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-    @Value("rCarSecretKey")
+    @Value("${security.secret}")
     private String jwtSecret;
 
-    @Value("7200")
+    @Value("${security.expiration}")
     private int jwtExpirationMs;
 
     public String generateJwtToken(Authentication authentication) {
