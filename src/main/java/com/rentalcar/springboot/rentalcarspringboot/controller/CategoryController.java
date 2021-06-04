@@ -2,7 +2,6 @@ package com.rentalcar.springboot.rentalcarspringboot.controller;
 
 import com.rentalcar.springboot.rentalcarspringboot.model.Category;
 import com.rentalcar.springboot.rentalcarspringboot.service.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +13,11 @@ import java.util.List;
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:4200")
 public class CategoryController {
-    @Autowired
     private CategoryService categoryService;
+
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping("/categories")
     public ResponseEntity<List<Category>> getCategories() {

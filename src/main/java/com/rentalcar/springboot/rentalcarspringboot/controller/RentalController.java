@@ -2,7 +2,6 @@ package com.rentalcar.springboot.rentalcarspringboot.controller;
 
 import com.rentalcar.springboot.rentalcarspringboot.model.Rental;
 import com.rentalcar.springboot.rentalcarspringboot.service.RentalService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +13,11 @@ import java.util.List;
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:4200")
 public class RentalController {
-    @Autowired
     private RentalService rentalService;
+
+    public RentalController(RentalService rentalService) {
+        this.rentalService = rentalService;
+    }
 
     @GetMapping("/rentals")
     public ResponseEntity<List<Rental>> getRentals() {
