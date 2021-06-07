@@ -2,6 +2,7 @@ package com.rentalcar.springboot.rentalcarspringboot.service;
 
 import com.rentalcar.springboot.rentalcarspringboot.model.Rental;
 import com.rentalcar.springboot.rentalcarspringboot.model.User;
+import com.rentalcar.springboot.rentalcarspringboot.model.Vehicle;
 import com.rentalcar.springboot.rentalcarspringboot.repository.RentalRepository;
 import org.springframework.stereotype.Service;
 
@@ -29,9 +30,12 @@ public class RentalServiceImpl implements RentalService {
         return rental.orElse(null);
     }
 
-    public List<Rental> findByUser(int id) {
-        User user = userService.findById(id);
+    public List<Rental> findByUser(User user) {
         return rentalRepository.findByUser(user);
+    }
+
+    public List<Rental> findByVehicle(Vehicle vehicle) {
+        return rentalRepository.findByVehicle(vehicle);
     }
 
     public void updateRental(Rental rental) {

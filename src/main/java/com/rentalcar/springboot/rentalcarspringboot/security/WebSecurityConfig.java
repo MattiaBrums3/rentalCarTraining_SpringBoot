@@ -1,7 +1,6 @@
 package com.rentalcar.springboot.rentalcarspringboot.security;
 
 import com.rentalcar.springboot.rentalcarspringboot.security.entity.UserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -48,12 +47,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
+    private static final String[] BOTH_URLS = {
+            "/users/get/{id}", "/users/post/edit",
+            "/vehicles/get/all", "/vehicles/get/{id}",
+            "/categories/get/all",
+            "/rentals/get-by-user/{id}", "/rentals/post/edit", "rentals/delete/{id}"
+    };
+
+    private static final String[] ADMIN_URLS = {
+            "/users/get/all", "/users/delete/{id}",
+            "/vehicles/post/edit", "/vehicles/delete/{id}", "/vehicles/get-by-category/{id}",
+            "/categories/get/{id}", "/categories/post/edit", "/categories/delete/{id}",
+            "/rentals/get-by-vehicle/{id}"
+    };
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/login").permitAll()
-                .antMatchers("/api/users").hasRole("ADMIN")
+                .antMatchers("/", "/auth/login").permitAll()
+                .antMatchers(BOTH_URLS).hasAnyRole("ADMIN", "CUSTOMER")
+                .antMatchers(ADMIN_URLS).hasRole("ADMIN")
                 .anyRequest().authenticated().and()
                 .exceptionHandling().authenticationEntryPoint(authEntryPointJwt).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

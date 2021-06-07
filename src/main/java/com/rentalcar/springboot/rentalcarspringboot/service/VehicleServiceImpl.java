@@ -1,5 +1,6 @@
 package com.rentalcar.springboot.rentalcarspringboot.service;
 
+import com.rentalcar.springboot.rentalcarspringboot.model.Category;
 import com.rentalcar.springboot.rentalcarspringboot.model.Vehicle;
 import com.rentalcar.springboot.rentalcarspringboot.repository.VehicleRepository;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,10 @@ public class VehicleServiceImpl implements VehicleService {
     public Vehicle findById(int id) {
         Optional<Vehicle> vehicle = vehicleRepository.findById(id);
         return vehicle.orElse(null);
+    }
+
+    public List<Vehicle> findByCategory(Category category) {
+        return vehicleRepository.findByCategory(category);
     }
 
     public void updateVehicle(Vehicle vehicle) {

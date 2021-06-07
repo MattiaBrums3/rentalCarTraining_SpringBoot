@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api")
-@CrossOrigin(origins = "*")
+@RequestMapping("/auth")
+@CrossOrigin(origins = "http://localhost:4200")
 public class AuthController {
 
     private AuthenticationManager authenticationManager;
@@ -46,18 +46,15 @@ public class AuthController {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        System.out.println("Authentication:" + authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
-        System.out.println("token: " + jwt);
+
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
         User user = userService.findByUsername(userDetails.getUsername());
-        System.out.println("username: " + user.getUsername());
         List<String> role = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-        System.out.println("role: " + role.get(0));
+
         return ResponseEntity.ok(new LoginResponse(jwt, user.getId(), user.getUsername(), role.get(0)));
     }
-
 }

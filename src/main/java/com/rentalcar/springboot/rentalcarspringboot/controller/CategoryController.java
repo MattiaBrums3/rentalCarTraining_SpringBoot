@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/categories")
 @CrossOrigin(origins = "http://localhost:4200")
 public class CategoryController {
     private CategoryService categoryService;
@@ -19,7 +19,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping("/categories")
+    @GetMapping("/get/all")
     public ResponseEntity<List<Category>> getCategories() {
         try {
             List<Category> categories = categoryService.findAll();
@@ -34,12 +34,12 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/categories/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<Category> getCategoryById(@PathVariable("id") int id) {
         return new ResponseEntity<>(categoryService.findById(id), new HttpHeaders(), HttpStatus.OK);
     }
 
-    @PostMapping("/categories")
+    @PostMapping("/post/edit")
     public ResponseEntity<Category> updateCategory(@RequestBody Category category) {
         try {
             categoryService.updateCategory(category);
@@ -49,7 +49,7 @@ public class CategoryController {
         }
     }
 
-    @DeleteMapping("/categories/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Category> deleteCategory(@PathVariable("id") int id) {
         try {
             categoryService.deleteCategory(id);
