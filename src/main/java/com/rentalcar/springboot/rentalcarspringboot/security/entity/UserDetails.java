@@ -3,8 +3,9 @@ package com.rentalcar.springboot.rentalcarspringboot.security.entity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 public class UserDetails implements org.springframework.security.core.userdetails.UserDetails {
     private int id;
@@ -14,7 +15,8 @@ public class UserDetails implements org.springframework.security.core.userdetail
 
     public UserDetails() {}
 
-    public UserDetails(String username, String password, Boolean superUser) {
+    public UserDetails(int id, String username, String password, Boolean superUser) {
+        this.id = id;
         this.username = username;
         this.password = password;
         this.superUser = superUser;
@@ -22,16 +24,21 @@ public class UserDetails implements org.springframework.security.core.userdetail
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+
         if (superUser) {
-            return Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         } else {
-            return Collections.singletonList(new SimpleGrantedAuthority("ROLE_CUSTOMER"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_CUSTOMER"));
         }
+
+        return authorities;
     }
 
     public int getId() {
         return id;
     }
+
     @Override
     public String getUsername() {
         return username;
