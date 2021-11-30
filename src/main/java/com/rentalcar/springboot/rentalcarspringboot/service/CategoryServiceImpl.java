@@ -25,6 +25,11 @@ public class CategoryServiceImpl implements CategoryService {
         return category.orElse(null);
     }
 
+    public Category findByTypology(String typology) {
+        Category category = categoryRepository.findByTypology(typology);
+        return category;
+    }
+
     public void updateCategory(Category category) {
         Category _category = new Category();
 

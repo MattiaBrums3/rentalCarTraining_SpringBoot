@@ -4,12 +4,17 @@ import com.rentalcar.springboot.rentalcarspringboot.model.Category;
 import com.rentalcar.springboot.rentalcarspringboot.model.Vehicle;
 import com.rentalcar.springboot.rentalcarspringboot.service.CategoryService;
 import com.rentalcar.springboot.rentalcarspringboot.service.VehicleService;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 @RestController
 @RequestMapping("/vehicles")
@@ -67,6 +72,60 @@ public class VehicleController {
         } catch (Exception e) {
             return new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PostMapping("/post/vehicles-from-file")
+    public ResponseEntity insertVehicles(@RequestParam("file") MultipartFile file) {
+        try
+        {
+            InputStream initialStream = file.getInputStream();
+            byte[] buffer = new byte[initialStream.available()];
+            initialStream.read(buffer);
+
+            File targetFile = new File("src/main/resources/targetFile.tmp");
+
+            try (OutputStream outStream = new FileOutputStream(targetFile)) {
+                outStream.write(buffer);
+            }
+
+            Vehicle vehicle = new Vehicle();
+            XSSFWorkbook wb = new XSSFWorkbook(targetFile);
+            XSSFSheet sheet = wb.getSheetAt(0);
+            Iterator<Row> itr = sheet.iterator();
+            Row row = itr.next();
+
+            while (itr.hasNext()) {
+                row = itr.next();
+                Cell cellModel = row.getCell(0);
+                String model = cellModel.getStringCellValue();
+                Cell cellManufacturer = row.getCell(1);
+                String manufacturer = cellManufacturer.getStringCellValue();
+                Cell cellPlate = row.getCell(2);
+                String plate = cellPlate.getStringCellValue();
+                Cell cellYear = row.getCell(3);
+                int year = (int) cellYear.getNumericCellValue();
+                Cell cellCategory = row.getCell(4);
+                String category = cellCategory.getStringCellValue();
+
+                Category cat = categoryService.findByTypology(category);
+
+                vehicle.setModel(model);
+                vehicle.setManufacturer(manufacturer);
+                vehicle.setLicensePlate(plate);
+                vehicle.setYearOfRegistration(year);
+                vehicle.setCategory(cat);
+
+                vehicleService.updateVehicle(vehicle);
+            }
+            wb.close();
+            targetFile.delete();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity(new HttpHeaders(), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/delete/{id}")

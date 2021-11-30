@@ -9,6 +9,8 @@ public interface CategoryService {
 
     Category findById(int id);
 
+    Category findByTypology(String typology);
+
     void updateCategory(Category category);
 
     void deleteCategory(int id);
